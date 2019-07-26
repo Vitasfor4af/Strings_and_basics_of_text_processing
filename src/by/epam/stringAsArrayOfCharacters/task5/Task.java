@@ -13,16 +13,62 @@ public class Task {
 		Scanner scanner = new Scanner(System.in);
 		String str = scanner.nextLine();
 		char[] charArray = str.toCharArray();
-		char[] copyArray = new char[charArray.length];
+
+		int beginIndex = 0;
+		int endIndex = 0;
 		for (int i = 0; i < charArray.length; i++) {
-			for (int j = i; j < copyArray.length; j++) {
-				if (!(charArray[i] == ' ')) {
-					copyArray[j] = charArray[i];
+			if (charArray[i] != ' ') {
+				beginIndex = i;
+				break;
+			}
+		}
+
+		for (int i = charArray.length - 1; i > 0; i--) {
+			if (charArray[i] != ' ') {
+				endIndex = i;
+				break;
+			}
+		}
+
+		int spaceCount = redundantSpaceCounter(charArray, beginIndex, endIndex);
+
+		char[] newArray = new char[((endIndex - beginIndex) + 1) - spaceCount];
+
+		for (int strIndex = beginIndex, newStrIndex = 0; strIndex <= endIndex;) {
+			if (charArray[strIndex] == ' ') {
+				newArray[newStrIndex] = charArray[strIndex];
+				strIndex++;
+				while (charArray[strIndex] == ' ') {
+					strIndex++;
+				}
+				newStrIndex++;
+			} else {
+				newArray[newStrIndex] = charArray[strIndex];
+				strIndex++;
+				newStrIndex++;
+			}
+		}
+		
+		System.out.println("Modified string:\n");
+		for (int i = 0; i < newArray.length; i++) {
+			System.out.print(newArray[i]);
+		}
+	}
+
+	private static int redundantSpaceCounter(char[] charArray, int beginIndex, int endIndex) {
+		int count = 0;
+
+		for (int i = beginIndex; i <= endIndex; i++) {
+			if (charArray[i] == ' ') {
+				i++;
+				while (charArray[i] == ' ') {
+					count++;
+					i++;
 				}
 			}
 		}
-		System.out.println(copyArray);
 
+		return count;
 	}
 
 }

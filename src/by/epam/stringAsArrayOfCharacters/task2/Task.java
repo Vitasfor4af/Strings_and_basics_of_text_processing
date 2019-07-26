@@ -1,5 +1,6 @@
 package by.epam.stringAsArrayOfCharacters.task2;
 
+import java.util.Arrays;
 import java.util.Scanner;
 
 /* Замените в строке все вхождения 'word' на 'letter'. */
@@ -10,37 +11,65 @@ public class Task {
 		System.out.println("Input some string:");
 		Scanner scanner = new Scanner(System.in);
 		String str = scanner.nextLine();
+		scanner.close();
+
 		char[] charArray = str.toCharArray();
-		
-		System.out.println("The modified string is :");
-		System.out.println(translate(charArray));
+		char[] word = { 'w', 'o', 'r', 'd' };
+		char[] letter = { 'l', 'e', 't', 't', 'e', 'r' };
+		int wordCount = calcCount(charArray, word);
 
-	}
+		char[] newArray = new char[charArray.length + wordCount * ((letter.length - word.length) + 1)];
 
-	static char[] translate(char[] str) {
-		char[] copyArr = new char[str.length * 2]; 
-		// Start traversing from second character
-		for (int i = 1; i < str.length; i++) {
-			// If previous character is 'A' and
-			// current character is 'B"
-			if (str[i - 1] == 'w' && str[i] == 'o' && str[i + 1] == 'r' && str[i + 2] == 'd') {
-				// Replace previous character with
-				// 'C' and move all subsequent
-				// characters one position back
-				copyArr[i - 1] = 'l';
-				copyArr[i + 1] = 'e';
-				copyArr[i + 2] = 't';
-				copyArr[i + 3] = 't';
-				copyArr[i + 4] = 'e';
-				copyArr[i + 5] = 'r';
-				int j;
-				for (j = i; j < copyArr.length - 1; j++)
-					copyArr[j] = copyArr[j + 1];
-				copyArr[j] = ' ';
-
+		for (int strIndex = 0, newStrIndex = 0; strIndex < charArray.length;) {
+			if (isWordByIndex(charArray, word, strIndex)) {
+				for (int j = 0; j < letter.length && newStrIndex < newArray.length; j++, newStrIndex++) {
+					System.out.println("index:" + newStrIndex);
+					newArray[newStrIndex] = letter[j];
+				}
+				strIndex += word.length;
+			} else {
+				newArray[newStrIndex] = charArray[strIndex];
+				strIndex++;
+				newStrIndex++;
 			}
 		}
-		return copyArr;
+
+		System.out.println("Modified string:\n");
+		for (int i = 0; i < newArray.length; i++) {
+			System.out.print(newArray[i]);
+		}
+	}
+
+	private static int calcCount(char[] str, char[] word) {
+		int count = 0;
+		for (int i = 0; i < str.length; i++) {
+			boolean isEqual = true;
+
+			for (int j = 0, strIndex = i; j < word.length && strIndex < str.length; j++, strIndex++) {
+				if (str[strIndex] != word[j]) {
+					isEqual = false;
+				}
+			}
+			if (isEqual) {
+				count++;
+			}
+		}
+
+		return count;
+	}
+
+	private static boolean isWordByIndex(char[] str, char[] word, int index) {
+		boolean isEqual = true;
+
+		for (int i = index, wordIndex = 0; i < str.length && wordIndex < word.length; i++, wordIndex++) {
+			if (str[i] != word[wordIndex]) {
+				isEqual = false;
+				break;
+			}
+
+		}
+
+		return isEqual;
 	}
 
 }
