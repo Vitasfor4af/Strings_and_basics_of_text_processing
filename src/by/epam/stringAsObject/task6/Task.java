@@ -10,6 +10,8 @@ public class Task {
 		System.out.println("Input some message:");
 		Scanner scanner = new Scanner(System.in);
 		String str = scanner.nextLine();
+		scanner.close();
+
 		String newStr = "";
 		for (int i = 0; i < str.length(); i++) {
 			newStr += str.charAt(i);

@@ -9,14 +9,16 @@ public class Task {
 
 	public static void main(String[] args) {
 		Scanner scanner = new Scanner(System.in);
-		System.out.print("Input the number of values = ");
+		System.out.print("Enter the number of sentences = ");
 		int size = scanner.nextInt();
+
 		String[] values = new String[size];
 		scanner.nextLine();
 		for (int i = 0; i < values.length; i++) {
-			System.out.println("Input name of value:");
+			System.out.println("Enter text containing camelCase words:");
 			values[i] = scanner.nextLine();
 		}
+		scanner.close();
 
 		System.out.println("Result of casting:");
 		for (int i = 0; i < values.length; i++) {
@@ -29,13 +31,13 @@ public class Task {
 		char[] str = variableStr.toCharArray();
 		int count = 0;
 		for (int i = 0; i < str.length; i++) {
-			if (Character.isUpperCase(str[i])) {
+			if (Character.isUpperCase(str[i]) && i != 0) {
 				count++;
 			}
 		}
 		char[] copyStr = new char[str.length + count];
 		for (int i = 0, j = 0; i < str.length; i++) {
-			if (Character.isUpperCase(str[i])) {
+			if (Character.isUpperCase(str[i]) && i != 0) {
 				copyStr[j] = '_';
 				copyStr[j + 1] = Character.toLowerCase(str[i]);
 				j += 2;

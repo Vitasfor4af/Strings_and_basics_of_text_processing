@@ -12,16 +12,9 @@ public class Task {
 		System.out.println("Input some message:");
 		Scanner scanner = new Scanner(System.in);
 		String str = scanner.nextLine();
-		String newStr = "";
-		int count = 0;
+		scanner.close();
 
-//		for (int i = 0; i < str.length(); i++) {
-//			for (int j = 0; j < str.length(); j++) {
-//				if (str.charAt(i) == str.charAt(j)) {
-//					newStr += str.charAt(i);
-//				}
-//			}
-//		}
+		String newStr = "";
 		for (int i = 0; i < str.length(); i++) {
 			if (!newStr.contains(String.valueOf(str.charAt(i)))) {
 				newStr += String.valueOf(str.charAt(i));

@@ -13,14 +13,16 @@ public class Task {
 		System.out.println("Input some message with spaces:");
 		Scanner scanner = new Scanner(System.in);
 		String str = scanner.nextLine();
-		while(isText(str) < 1) {
+
+		while (isText(str) < 1) {
 			System.out.println("The entered text does not contain sentences (at least one sentence). try again");
 			str = scanner.nextLine();
 		}
 		scanner.close();
+
 		System.out.println("This text has " + isText(str) + " sentences.");
 	}
-	
+
 	public static int isText(String str) {
 		int count = 0;
 		for (int i = 0; i < str.length(); i++) {

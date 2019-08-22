@@ -12,10 +12,12 @@ public class Task {
 		System.out.println("Input some string:");
 		Scanner scanner = new Scanner(System.in);
 		String str = scanner.nextLine();
+		scanner.close();
+		
 		char[] charArray = str.toCharArray();
-
 		int beginIndex = 0;
 		int endIndex = 0;
+		
 		for (int i = 0; i < charArray.length; i++) {
 			if (charArray[i] != ' ') {
 				beginIndex = i;

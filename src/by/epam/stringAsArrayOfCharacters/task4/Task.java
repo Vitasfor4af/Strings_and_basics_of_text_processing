@@ -10,24 +10,31 @@ public class Task {
 		System.out.println("Input some string:");
 		Scanner scanner = new Scanner(System.in);
 		String str = scanner.nextLine();
+		scanner.close();
+
 		char[] charArray = str.toCharArray();
 
-		int digitCount = 0; 
+		System.out.println("Count of numbers = " + numberCount(charArray));
+
+	}
+
+	private static int numberCount(char[] charArray) {
+		boolean numberFlag = true;
 		int numberCount = 0;
-		boolean isNumber = false;
-		for (int i = 0; i < str.length(); i++) {
+		
+		for (int i = 0; i < charArray.length; i++) {
 			if (charArray[i] >= '0' && charArray[i] <= '9') {
-				digitCount++;
-				if (!isNumber) {
+				if (numberFlag) {
 					numberCount++;
-					isNumber = true;
+					numberFlag = false;
 				}
-			} else {
-				isNumber = false;
+			}
+			else {
+				numberFlag = true;
 			}
 		}
-		System.out.println("Count of numbers = " + numberCount);
 
+		return numberCount;
 	}
 
 }

@@ -1,6 +1,5 @@
 package by.epam.stringAsArrayOfCharacters.task2;
 
-import java.util.Arrays;
 import java.util.Scanner;
 
 /* Замените в строке все вхождения 'word' на 'letter'. */
@@ -23,7 +22,6 @@ public class Task {
 		for (int strIndex = 0, newStrIndex = 0; strIndex < charArray.length;) {
 			if (isWordByIndex(charArray, word, strIndex)) {
 				for (int j = 0; j < letter.length && newStrIndex < newArray.length; j++, newStrIndex++) {
-					System.out.println("index:" + newStrIndex);
 					newArray[newStrIndex] = letter[j];
 				}
 				strIndex += word.length;
@@ -34,7 +32,7 @@ public class Task {
 			}
 		}
 
-		System.out.println("Modified string:\n");
+		System.out.println("Modified string:");
 		for (int i = 0; i < newArray.length; i++) {
 			System.out.print(newArray[i]);
 		}

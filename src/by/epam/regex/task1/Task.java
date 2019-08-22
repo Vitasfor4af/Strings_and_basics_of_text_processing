@@ -1,7 +1,6 @@
 package by.epam.regex.task1;
 
 import java.util.Scanner;
-import java.util.StringTokenizer;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
@@ -17,77 +16,306 @@ public class Task {
 
 	public static void main(String[] args) {
 		Scanner scanner = new Scanner(System.in);
-		System.out.println("Input some message:");
-		String str = scanner.nextLine();
+		String key = "";
+		String str = "";
+		String[] text;
 
-		System.out.println("\nWhat do you want to do?\nsort the paragraphs by the number of sentences(1);\n"
-				+ "in each sentence, sort the words by length(2);\n"
-				+ "sort the tokens in the sentence in descending order of quantity occurrences of a given character(3).");
-		int choice;
-		switch (choice = scanner.nextInt()) {
-		case 1:
-			System.out.println("1");
-			StringTokenizer strToken = new StringTokenizer(str, ".?!");
-			int count = strToken.countTokens(); // Counting no. of sentences in the paragraph
-			if (count > 10)
-				System.out.println("A maximum of 10 sentences are allowed in the paragraph");
-			else {
-				String sent[] = new String[count]; // Array to store the sentences separately
-				int p[] = new int[count]; // Array to store no. of words of each sentence
-
-				for (int i = 0; i < count; i++) {
-					sent[i] = strToken.nextToken().trim(); // Saving sentences one by one in an array
-					p[i] = countWords(sent[i]); // Saving no. of words of every sentence
+		while (!(key.equals("Y") || key.equals("y"))) {
+			System.out.println("-------------------------------------------");
+			System.out.println("###########################################");
+			System.out.println("-------------------------------------------");
+			System.out.println("\t\t***MENU***");
+			System.out.println("\t1 - Text input");
+			System.out.println("\t2 - sort paragraphs by number of sentences");
+			System.out.println("\t3 - in each sentence, sort words by length");
+			System.out
+					.println("\t4 - sort tokens in a sentence in descending order of occurrences of a given character");
+			System.out.println("\tc - exit");
+			switch (key = scanner.nextLine()) {
+			case "1":
+				System.out.print("Input the number of sentences in the text, size = ");
+				int size = scanner.nextInt();
+				while (size < 2) {
+					System.out.println("Invalid value of size (minimum two sentences), try again");
+					size = scanner.nextInt();
 				}
-				sort(sent, p);
+				text = new String[size];
+				System.out.println("\nInput the text:");
+				scanner.nextLine();
+				int k = 0;
+				while (k < size) {
+					text[k] = scanner.nextLine();
+					if (text[k].matches("((\\w+(\\s?\\w+)*)+(\\.|\\!|\\?))+")) {
+						str += text[k] + "\n";
+						k++;
+					} else {
+						System.out.println("the text is not divided into sentences, try again");
+					}
+				}
+				System.out.println("Do you wish to exit from program[Y/N]?");
+				key = scanner.nextLine();
+				if (key.equals("Y") || key.equals("y")) {
+					scanner.close();
+				} else if (!(key.equals("N") || key.equals("n"))) {
+					doDefault(key, scanner);
+				}
+				break;
+			case "2":
+				if (str.equals("")) {
+					System.out.println("Before you perform the operation, you must enter the line (menu item - 1)");
+				} else {
+					sortParagraphsByNumberOfSentences(str);
+				}
+				System.out.println("Do you wish to exit from program[Y/N]?");
+				key = scanner.nextLine();
+				if (key.equals("Y") || key.equals("y")) {
+					scanner.close();
+				} else if (!(key.equals("N") || key.equals("n"))) {
+					doDefault(key, scanner);
+				}
+				break;
+			case "3":
+				if (str.equals("")) {
+					System.out.println("Before you perform the operation, you must enter the line (menu item - 1)");
+				} else {
+					sortWordsByLength(str);
+				}
+				System.out.println("Do you wish to exit from program[Y/N]?");
+				key = scanner.nextLine();
+				if (key.equals("Y") || key.equals("y")) {
+					scanner.close();
+				} else if (!(key.equals("N") || key.equals("n"))) {
+					doDefault(key, scanner);
+				}
+				break;
+			case "4":
+				if (str.equals("")) {
+					System.out.println("Before you perform the operation, you must input the text (menu item - 1)");
+				} else {
+					System.out.println("Input the symbol:");
+					char character = scanner.nextLine().charAt(0);
+					sortTokensByDesc(str, character);
+				}
+				System.out.println("Do you wish to exit from program[Y/N]?");
+				key = scanner.nextLine();
+				if (key.equals("Y") || key.equals("y")) {
+					scanner.close();
+				} else if (!(key.equals("N") || key.equals("n"))) {
+					doDefault(key, scanner);
+				}
+				break;
+			case "c":
+			case "C":
+				System.out.println("Exit from program");
+				key = "Y";
+				if (key.equals("Y")) {
+					scanner.close();
+				}
+				break;
+			default:
+				doDefault(key, scanner);
+				break;
 			}
-			break;
-		case 2:
-			System.out.println("2");
-
-			break;
-		case 3:
-			System.out.println("3");
-			break;
-		default:
-			System.out.println("Invalid choice");
-			System.exit(0);
-			break;
 		}
 	}
 
-	public static int countWords(String s) {
-		StringTokenizer str = new StringTokenizer(s, " .,?!");
-		int c = str.countTokens();
-		return c;
-	}
+	private static void sortParagraphsByNumberOfSentences(String str) {
+		String[] lines = getLinesArray(str, getLinesNumber(str));
 
-	// Function to sort the sentences in ascending order of their no. of words
-	public static void sort(String w[], int p[]) {
-		int n = w.length, t1 = 0;
-		String t2 = "";
+		int sentenceCount = getMaxSentecesCountInLine(lines);
 
-		for (int i = 0; i < n - 1; i++) {
-			for (int j = i + 1; j < n; j++) {
-				if (p[i] > p[j]) // for descending use p[i]<p[j]
-				{
-					t1 = p[i];
-					p[i] = p[j];
-					p[j] = t1;
-					t2 = w[i];
-					w[i] = w[j];
-					w[j] = t2;
+		for (int count = 0; count <= sentenceCount; count++) {
+			for (int j = 0; j < lines.length; j++) {
+				if (getSentencesNumber(lines[j]) == count) {
+					System.out.print(lines[j]);
 				}
 			}
 		}
-		printResult(w, p); // Calling function for printing the result
 	}
 
-	public static void printResult(String w[], int p[]) // Function to print the final result
-	{
-		int n = w.length;
-		for (int i = 0; i < n; i++) {
-			System.out.println(w[i] + "\t=\t" + p[i]);
+	private static void sortWordsByLength(String str) {
+		String[] lines = getLinesArray(str, getLinesNumber(str));
+
+		for (int i = 0; i < lines.length; i++) {
+			String[] sentences = getSentencesArray(lines[i], getSentencesNumber(lines[i]));
+
+			for (int j = 0; j < sentences.length; j++) {
+
+				int maxWordLen = getMaxWordLengthInSentence(sentences[j]);
+				String[] words = getWordsArray(sentences[j], getWordsNumber(sentences[j]));
+
+				for (int len = 0; len <= maxWordLen; len++) {
+					for (int k = 0; k < words.length; k++) {
+						if (words[k].length() == len) {
+							System.out.print(words[k] + " ");
+						}
+					}
+				}
+				System.out.println();
+			}
+		}
+	}
+
+	private static void sortTokensByDesc(String str, char character) {
+		String[] lines = getLinesArray(str, getLinesNumber(str));
+
+		for (int lineIndex = 0; lineIndex < lines.length; lineIndex++) {
+			String[] sentences = getSentencesArray(lines[lineIndex], getSentencesNumber(lines[lineIndex]));
+
+			for (int sentenceIndex = 0; sentenceIndex < sentences.length; sentenceIndex++) {
+
+				String[] words = getWordsArray(sentences[sentenceIndex], getWordsNumber(sentences[sentenceIndex]));
+
+				for (int i = 1; i < words.length; i++) {
+					for (int j = words.length - 1; j >= i; j--) {
+						if ((getCharacterCount(words[j - 1], character) < getCharacterCount(words[j], character))
+								|| (getCharacterCount(words[j - 1], character) == getCharacterCount(words[j], character)
+										&& (words[j].compareTo(words[j - 1]) > 0))) {
+							String temp = words[j];
+							words[j] = words[j - 1];
+							words[j - 1] = temp;
+
+						}
+					}
+				}
+
+				for (int i = 0; i < words.length; i++) {
+					System.out.print(words[i] + " ");
+				}
+				System.out.println();
+			}
+		}
+	}
+
+	private static int getCharacterCount(String str, char character) {
+		int count = 0;
+		for (int i = 0; i < str.length(); i++) {
+			if (str.charAt(i) == character) {
+				count++;
+			}
+		}
+
+		return count;
+	}
+
+	private static int getMaxSentecesCountInLine(String[] lines) {
+		int sentenceCount = 0;
+
+		for (int i = 0; i < lines.length; i++) {
+			if (getSentencesNumber(lines[i]) > sentenceCount) {
+				sentenceCount = getSentencesNumber(lines[i]);
+			}
+		}
+		return sentenceCount;
+	}
+
+	private static int getMaxWordLengthInSentence(String sentence) {
+		int len = 0;
+		String[] words = getWordsArray(sentence, getWordsNumber(sentence));
+		for (int i = 0; i < words.length; i++) {
+			if (words[i].length() > len) {
+				len = words[i].length();
+			}
+		}
+
+		return len;
+	}
+
+	private static String[] getSentencesArray(String line, int size) {
+		String[] sentencesArray = new String[size];
+
+		Pattern pattern = Pattern.compile("(\\w+(\\s?\\w+)*)+(\\.|\\!|\\?)");
+		Matcher matcher = pattern.matcher(line);
+
+		while (matcher.find()) {
+			for (int i = 0; i < sentencesArray.length; i++) {
+				if (sentencesArray[i] == null) {
+					sentencesArray[i] = matcher.group();
+					break;
+				}
+			}
+		}
+
+		return sentencesArray;
+	}
+
+	private static int getSentencesNumber(String line) {
+		int count = 0;
+		Pattern pattern = Pattern.compile("(\\w+(\\s?\\w+)*)+(\\.|\\!|\\?)");
+		Matcher matcher = pattern.matcher(line);
+		while (matcher.find()) {
+			count++;
+		}
+
+		return count;
+	}
+
+	private static int getWordsNumber(String line) {
+		int count = 0;
+		Pattern pattern = Pattern.compile("\\w+");
+		Matcher matcher = pattern.matcher(line);
+		while (matcher.find()) {
+			count++;
+		}
+
+		return count;
+	}
+
+	private static String[] getWordsArray(String sentence, int size) {
+		String[] wordsArray = new String[size];
+
+		Pattern pattern = Pattern.compile("\\w+");
+		Matcher matcher = pattern.matcher(sentence);
+
+		while (matcher.find()) {
+
+			for (int i = 0; i < wordsArray.length; i++) {
+				if (wordsArray[i] == null) {
+					wordsArray[i] = matcher.group();
+					break;
+				}
+			}
+		}
+
+		return wordsArray;
+	}
+
+	private static int getLinesNumber(String str) {
+		int count = 0;
+		Pattern pattern = Pattern.compile(".\\n");
+		Matcher matcher = pattern.matcher(str);
+
+		while (matcher.find()) {
+			count++;
+		}
+		return count;
+	}
+
+	private static String[] getLinesArray(String allLines, int size) {
+		String[] linesArray = new String[size];
+
+		Pattern pattern = Pattern.compile(".+\\n");
+		Matcher matcher = pattern.matcher(allLines);
+		while (matcher.find()) {
+			for (int i = 0; i < linesArray.length; i++) {
+				if (linesArray[i] == null) {
+					linesArray[i] = matcher.group();
+					break;
+				}
+			}
+		}
+
+		return linesArray;
+	}
+
+	private static void doDefault(String key, Scanner scanner) {
+		System.out.println("Unsupported key was pressed");
+		System.out.println("Do you wish to exit from program[Y/N]?");
+		key = scanner.nextLine();
+		if (key.equals("Y")) {
+			scanner.close();
+		} else if (!(key.equals("N") || key.equals("n"))) {
+			doDefault(key, scanner);
 		}
 	}
 

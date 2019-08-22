@@ -14,6 +14,7 @@ public class Task {
 		Scanner scanner = new Scanner(System.in);
 		String str = scanner.nextLine();
 		scanner.close();
+
 		int i;
 		int max = 0;
 		int id = 0;
